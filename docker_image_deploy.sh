@@ -1,4 +1,23 @@
 #!/bin/sh
+
+docker --tlsverify -H tcp://192.168.99.100:2376 run -d \
+--name kong-database \
+-p 5432:5432 \
+-e "POSTGRES_USER=kong" \
+-e "POSTGRES_DB=kong" \
+postgres:9.4
+
+docker run -d --name kong \
+--link kong-database:kong-database \
+-e "KONG_DATABASE=postgres" \
+-e "KONG_PG_HOST=kong-database" \
+-p 80:80 \
+-p 443:443 \
+-p 8001:8001 \
+-p 7946:7946 \
+-p 7946:7946/udp \
+kong
+
 docker --tlsverify -H tcp://192.168.99.100:2376 build -t achuthman/$ServiceName .
 status=$?
 if [ $status -ne "0" ]; then
