@@ -1,3 +1,4 @@
+#!/bin/sh
 docker --tlsverify -H tcp://192.168.99.100:2376 build -t achuthman/$ServiceName .
 status=\$?
 if [ \$status -ne "0" ]; then
