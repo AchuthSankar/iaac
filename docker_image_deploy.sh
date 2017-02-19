@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/sh -x
 
-running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong-database | grep -v -c -i Up`
-if [ $running -ne 0 ]; then
+zombie=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong-database | grep -v -c -i Up`
+if [ $zombie -ne 0 ]; then
 	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong-database
 fi
 
@@ -12,8 +12,10 @@ docker --tlsverify -H tcp://192.168.99.100:2376 run -d \
 -e "POSTGRES_DB=kong" \
 postgres:9.4
 
-running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong | grep -v -c -i Up`
-if [ $running -ne 0 ]; then
+sleep(5)
+
+zombie=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong | grep -v -c -i Up`
+if [ $zombie -ne 0 ]; then
 	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong
 fi
 
