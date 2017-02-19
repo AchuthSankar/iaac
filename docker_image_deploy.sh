@@ -1,11 +1,21 @@
 #!/bin/sh
 
+running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong-database | grep -v -c -i Up`
+if [ $running -ne 0 ]; then
+	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong-database
+fi
+
 docker --tlsverify -H tcp://192.168.99.100:2376 run -d \
 --name kong-database \
 -p 5432:5432 \
 -e "POSTGRES_USER=kong" \
 -e "POSTGRES_DB=kong" \
 postgres:9.4
+
+running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong | grep -v -c -i Up`
+if [ $running -ne 0 ]; then
+	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong
+fi
 
 docker run -d --name kong \
 --link kong-database:kong-database \
