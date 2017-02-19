@@ -12,7 +12,7 @@ docker --tlsverify -H tcp://192.168.99.100:2376 run -d \
 -e "POSTGRES_DB=kong" \
 postgres:9.4
 
-sleep(5)
+sleep 5
 
 zombie=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong | grep -v -c -i Up`
 if [ $zombie -ne 0 ]; then
