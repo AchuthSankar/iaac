@@ -17,15 +17,15 @@ fi
 
 sleep 5
 
-zombie=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong | grep -v -c -i Up`
+zombie=`docker --tlsverify -H tcp://192.168.99.100:2376 ps -a | grep kong-api-gw | grep -v -c -i Up`
 if [ $zombie -ne 0 ]; then
-	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong
+	docker --tlsverify -H tcp://192.168.99.100:2376 rm kong-api-gw
 fi
 
-running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps | grep kong | grep -c -i Up`
+running=`docker --tlsverify -H tcp://192.168.99.100:2376 ps | grep kong-api-gw | grep -c -i Up`
 if [ $running -eq 0 ]; then
 	docker --tlsverify -H tcp://192.168.99.100:2376 run -d \
-	--name kong \
+	--name kong-api-gw \
 	--link kong-database:kong-database \
 	-e "KONG_DATABASE=postgres" \
 	-e "KONG_PG_HOST=kong-database" \
